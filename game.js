@@ -4,6 +4,7 @@ const playerScoreDisplay = document.getElementById('playerScore');
 const computerScoreDisplay = document.getElementById('computerScore');
 const resetBtn = document.getElementById('resetBtn');
 const statusText = document.getElementById('statusText');
+const touchControlArea = document.getElementById('touchControlArea');
 
 // Canvas scaling for responsive design
 function resizeCanvas() {
@@ -20,6 +21,39 @@ function resizeCanvas() {
 
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
+
+// Handle fullscreen mode for landscape orientation
+function handleOrientationChange() {
+    const isLandscape = window.innerHeight < window.innerWidth;
+    
+    if (isLandscape) {
+        document.body.classList.add('fullscreen-mode');
+        // Request fullscreen if available
+        if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.log('Fullscreen request failed:', err);
+            });
+        }
+    } else {
+        document.body.classList.remove('fullscreen-mode');
+        // Exit fullscreen if active
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(err => {
+                console.log('Exit fullscreen failed:', err);
+            });
+        }
+    }
+    
+    resizeCanvas();
+}
+
+window.addEventListener('orientationchange', handleOrientationChange);
+window.addEventListener('resize', () => {
+    handleOrientationChange();
+});
+
+// Check on load
+window.addEventListener('load', handleOrientationChange);
 
 // Game Objects
 const paddleWidth = 10;
@@ -88,12 +122,11 @@ canvas.addEventListener('click', () => {
     }
 });
 
-// Touch events
-canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    gameRunning = true;
-    gameStarted = true;
-    statusText.textContent = 'Game Running...';
+// Touch events - on entire screen (document-wide)
+document.addEventListener('touchstart', (e) => {
+    if (!gameRunning) {
+        startGame();
+    }
     
     const touch = e.touches[0];
     const rect = canvas.getBoundingClientRect();
@@ -103,7 +136,7 @@ canvas.addEventListener('touchstart', (e) => {
     isTouching = true;
 }, { passive: false });
 
-canvas.addEventListener('touchmove', (e) => {
+document.addEventListener('touchmove', (e) => {
     e.preventDefault();
     const touch = e.touches[0];
     const rect = canvas.getBoundingClientRect();
@@ -111,16 +144,14 @@ canvas.addEventListener('touchmove', (e) => {
     touchY = (touch.clientY - rect.top) * scaleY;
 }, { passive: false });
 
-canvas.addEventListener('touchend', (e) => {
+document.addEventListener('touchend', (e) => {
     e.preventDefault();
     isTouching = false;
 }, { passive: false });
 
 // Prevent default touch behaviors
 document.addEventListener('touchmove', (e) => {
-    if (e.target === canvas || canvas.contains(e.target)) {
-        e.preventDefault();
-    }
+    e.preventDefault();
 }, { passive: false });
 
 function startGame() {
@@ -144,7 +175,7 @@ function resetGame() {
     computerScore = 0;
     gameRunning = false;
     gameStarted = false;
-    statusText.textContent = 'Game Ready - Click to Start';
+    statusText.textContent = 'Press anywhere to start';
     playerScoreDisplay.textContent = playerScore;
     computerScoreDisplay.textContent = computerScore;
     resetBall();
@@ -164,8 +195,8 @@ function updatePlayerPaddle() {
         player.y = mouseY - player.height / 2;
     }
 
-    // Touch control (left side of screen)
-    if (isTouching && touchY > 0 && touchY < canvas.width / 2) {
+    // Touch control (anywhere on screen)
+    if (isTouching) {
         if (touchY - player.height / 2 > 0 && touchY + player.height / 2 < canvas.height) {
             player.y = touchY - player.height / 2;
         }
@@ -291,9 +322,4 @@ gameLoop();
 // Prevent accidental scrolling
 document.addEventListener('gesturestart', (e) => {
     e.preventDefault();
-});
-
-// Handle device orientation
-window.addEventListener('orientationchange', () => {
-    resizeCanvas();
 });
