@@ -1,2 +1,2 @@
 # PongGame
-A Pong game built with Python.
+A Pong game built with JavaScript, CSS, and HTML.
