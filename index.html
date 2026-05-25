@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Pong Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <h1>Pong Game</h1>
+            <div class="score-board">
+                <div class="player-score">
+                    <p>Player</p>
+                    <span id="playerScore">0</span>
+                </div>
+                <div class="divider">:</div>
+                <div class="computer-score">
+                    <p>Computer</p>
+                    <span id="computerScore">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-wrapper">
+            <canvas id="pongCanvas" width="800" height="400"></canvas>
+        </div>
+
+        <div class="controls-info">
+            <div class="controls-desktop">
+                <h3>Desktop Controls:</h3>
+                <p>🖱️ <strong>Mouse:</strong> Move paddles with your mouse (left paddle)</p>
+                <p>⌨️ <strong>Arrow Keys:</strong> Up/Down arrows to control left paddle</p>
+            </div>
+            <div class="controls-mobile">
+                <h3>Mobile Controls:</h3>
+                <p>👆 <strong>Touch & Drag:</strong> Drag your finger on the left side to move the left paddle</p>
+            </div>
+            <button id="resetBtn" class="reset-btn">Reset Game</button>
+        </div>
+
+        <div class="game-status">
+            <p id="statusText">Game Ready - Click to Start</p>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
