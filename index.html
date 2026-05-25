@@ -35,15 +35,18 @@
             </div>
             <div class="controls-mobile">
                 <h3>Mobile Controls:</h3>
-                <p>👆 <strong>Touch & Drag:</strong> Drag your finger on the left side to move the left paddle</p>
+                <p>👆 <strong>Touch Anywhere:</strong> Touch and drag anywhere on the screen to move the left paddle</p>
             </div>
             <button id="resetBtn" class="reset-btn">Reset Game</button>
         </div>
 
         <div class="game-status">
-            <p id="statusText">Game Ready - Click to Start</p>
+            <p id="statusText">Press anywhere to start</p>
         </div>
     </div>
+
+    <!-- Full-screen control area for mobile -->
+    <div id="touchControlArea" class="touch-control-area"></div>
 
     <script src="game.js"></script>
 </body>
